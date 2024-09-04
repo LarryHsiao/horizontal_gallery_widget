@@ -43,34 +43,37 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: HorizontalGalleryWidget(
-        images: [
-          GalleryItem(
-            uri: 'https://dummyimage.com/300x100',
-            title: 'Image 1',
-            description: 'Description 1',
-          ),
-          GalleryItem(
-            uri: 'https://dummyimage.com/300x600',
-            title: 'Image 2',
-            description: 'Description 2',
-          ),
-          GalleryItem(
-            uri: 'https://dummyimage.com/300x400',
-            title: 'Image 3',
-            description: 'Description 3',
-          ),
-          GalleryItem(
-            uri: 'https://dummyimage.com/300x200',
-            title: 'Image 4',
-            description: 'Description 4',
-          ),
-          GalleryItem(
-            uri: 'https://dummyimage.com/300x300',
-            title: 'Image 5',
-            description: 'Description 5',
-          )
-        ],
+      body: SizedBox(
+        height: 300,
+        child: HorizontalGalleryWidget(
+          images: [
+            GalleryItem(
+              uri: 'https://picsum.photos/300/100',
+              title: 'Image 1',
+              description: 'Description 1',
+            ),
+            GalleryItem(
+              uri: 'https://picsum.photos/300/600',
+              title: 'Image 2',
+              description: 'Description 2',
+            ),
+            GalleryItem(
+              uri: 'https://picsum.photos/300/400',
+              title: 'Image 3',
+              description: 'Description 3',
+            ),
+            GalleryItem(
+              uri: 'https://picsum.photos/300/200',
+              title: 'Image 4',
+              description: 'Description 4',
+            ),
+            GalleryItem(
+              uri: 'https://picsum.photos/300/300',
+              title: 'Image 5',
+              description: 'Description 5',
+            )
+          ],
+        ),
       ),
     );
   }
