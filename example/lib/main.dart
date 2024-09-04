@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SizedBox(
         height: 300,
         child: HorizontalGalleryWidget(
-          images: [
+          items: [
             GalleryItem(
               uri: 'https://picsum.photos/300/100',
               title: 'Image 1',
@@ -73,6 +73,13 @@ class _MyHomePageState extends State<MyHomePage> {
               description: 'Description 5',
             )
           ],
+          onItemTap: (item) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Tapped on ${item.title}'),
+              ),
+            );
+          },
         ),
       ),
     );
