@@ -44,8 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SizedBox(
-        height: 300,
+        height: 100,
         child: HorizontalGalleryWidget(
+          labelWidth: 200,
           items: [
             GalleryItem(
               uri: 'https://picsum.photos/300/100',
