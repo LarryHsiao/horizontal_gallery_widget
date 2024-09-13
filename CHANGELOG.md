@@ -1,3 +1,6 @@
+## 0.0.4
+- Image widget builder
+
 ## 0.0.3
 
 - Parameters for displaying labels.

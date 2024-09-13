@@ -7,6 +7,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
   final double labelWidth;
   final List<GalleryItem> items;
   final void Function(GalleryItem item)? _onItemTap;
+  final Widget Function(String url)? _imageBuilder;
 
   /// Ctor.
   const HorizontalGalleryWidget({
@@ -15,7 +16,9 @@ class HorizontalGalleryWidget extends StatelessWidget {
     this.labels = true,
     this.labelWidth = 300,
     void Function(GalleryItem)? onItemTap,
-  }) : _onItemTap = onItemTap;
+    Widget Function(String uri)? imageBuilder,
+  })  : _onItemTap = onItemTap,
+        _imageBuilder = imageBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +38,9 @@ class HorizontalGalleryWidget extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Image.network(
-                      items[index].uri,
-                      fit: BoxFit.cover,
-                    ),
+                    child: _imageBuilder == null
+                        ? Image.network(items[index].uri, fit: BoxFit.cover)
+                        : _imageBuilder(items[index].uri),
                   ),
                   if (items[index].title.isNotEmpty &&
                       items[index].description.isNotEmpty &&
