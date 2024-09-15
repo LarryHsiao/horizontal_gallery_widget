@@ -44,9 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SizedBox(
-        height: 100,
+        height: 300,
         child: HorizontalGalleryWidget(
-          labelWidth: 200,
+          size: 200,
+          editing: true,
           items: [
             GalleryItem(
               uri: 'https://picsum.photos/300/100',
@@ -78,6 +79,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Tapped on ${item.title}'),
+              ),
+            );
+          },
+          onItemDelete: (item) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Tapped on delete button ${item.title}'),
               ),
             );
           },

@@ -3,75 +3,114 @@ import 'package:horizontal_gallery_widget/src/gallery_item.dart';
 
 /// A widget that displays a horizontal gallery of items.
 class HorizontalGalleryWidget extends StatelessWidget {
-  final bool labels;
-  final double labelWidth;
-  final List<GalleryItem> items;
+  final bool _editing;
+  final bool _labels;
+  final double _size;
+  final List<GalleryItem> _items;
   final void Function(GalleryItem item)? _onItemTap;
+  final void Function(GalleryItem item)? _onItemDelete;
   final Widget Function(String url)? _imageBuilder;
 
   /// Ctor.
   const HorizontalGalleryWidget({
     super.key,
-    required this.items,
-    this.labels = true,
-    this.labelWidth = 300,
+    required List<GalleryItem> items,
+    bool editing = false,
+    bool labels = true,
+
+    /// Original size, if the container is smaller then this size, the widgets will be scaled down.
+    double size = 300,
     void Function(GalleryItem)? onItemTap,
+    void Function(GalleryItem)? onItemDelete,
     Widget Function(String uri)? imageBuilder,
-  })  : _onItemTap = onItemTap,
-        _imageBuilder = imageBuilder;
+  })  : _items = items,
+        _size = size,
+        _editing = editing,
+        _onItemTap = onItemTap,
+        _imageBuilder = imageBuilder,
+        _labels = labels,
+        _onItemDelete = onItemDelete;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: items.length,
+      itemCount: _items.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () => _onItemTap?.call(items[index]),
+          onTap: () => _onItemTap?.call(_items[index]),
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
             clipBehavior: Clip.antiAlias,
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: _imageBuilder == null
-                        ? Image.network(
-                            items[index].uri,
-                            fit: BoxFit.cover,
-                            frameBuilder: (context, child, frame, _) {
-                              if (frame == null) {
+            child: FittedBox(
+              child: SizedBox(
+                width: _size,
+                height: _size,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: _imageBuilder == null
+                          ? Image.network(
+                              _items[index].uri,
+                              fit: BoxFit.cover,
+                              frameBuilder: (context, child, frame, _) {
+                                if (frame == null) {
+                                  return const Center(
+                                    child: SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+                                return child;
+                              },
+                              errorBuilder: (context, error, _) {
                                 return const Center(
-                                  child: SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(),
-                                  ),
+                                  child: Icon(Icons.warning),
                                 );
-                              }
-                              return child;
-                            },
-                            errorBuilder: (context, error, _) {
-                              return const Center(
-                                child: Icon(Icons.warning),
-                              );
-                            },
-                          )
-                        : _imageBuilder(items[index].uri),
-                  ),
-                  if (items[index].title.isNotEmpty &&
-                      items[index].description.isNotEmpty &&
-                      labels)
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: FittedBox(child: _labels(context, index)),
+                              },
+                            )
+                          : _imageBuilder(_items[index].uri),
                     ),
-                ],
+                    if (_editing)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: InkWell(
+                          onTap: () => _onItemDelete?.call(_items[index]),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipOval(
+                              child: Container(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withOpacity(0.4),
+                                child: Icon(
+                                  Icons.close,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onInverseSurface,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (_items[index].title.isNotEmpty &&
+                        _items[index].description.isNotEmpty &&
+                        _labels)
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: _buildLabels(context, index),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -80,9 +119,9 @@ class HorizontalGalleryWidget extends StatelessWidget {
     );
   }
 
-  Widget _labels(BuildContext context, int index) {
+  Widget _buildLabels(BuildContext context, int index) {
     return Container(
-      width: labelWidth,
+      width: _size,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.bottomCenter,
@@ -99,14 +138,14 @@ class HorizontalGalleryWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            items[index].title,
+            _items[index].title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onInverseSurface,
                 ),
           ),
           Text(
-            items[index].description,
+            _items[index].description,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onInverseSurface,
                 ),
