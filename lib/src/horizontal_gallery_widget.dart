@@ -39,7 +39,27 @@ class HorizontalGalleryWidget extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: _imageBuilder == null
-                        ? Image.network(items[index].uri, fit: BoxFit.cover)
+                        ? Image.network(
+                            items[index].uri,
+                            fit: BoxFit.cover,
+                            frameBuilder: (context, child, frame, _) {
+                              if (frame == null) {
+                                return const Center(
+                                  child: SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+                              return child;
+                            },
+                            errorBuilder: (context, error, _) {
+                              return const Center(
+                                child: Icon(Icons.warning),
+                              );
+                            },
+                          )
                         : _imageBuilder(items[index].uri),
                   ),
                   if (items[index].title.isNotEmpty &&
