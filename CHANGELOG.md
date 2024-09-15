@@ -1,3 +1,6 @@
+## 0.0.5
+- Loading frame
+
 ## 0.0.4
 - Image widget builder
 
