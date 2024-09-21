@@ -49,27 +49,27 @@ class _MyHomePageState extends State<MyHomePage> {
           size: 200,
           editing: true,
           items: [
-            GalleryItem(
+            NetworkGalleryItem(
               uri: 'https://picsum.photos/300/100',
               title: 'Image 1',
               description: 'Description 1',
             ),
-            GalleryItem(
+            NetworkGalleryItem(
               uri: 'https://picsum.photos/300/600',
               title: 'Image 2',
               description: 'Description 2',
             ),
-            GalleryItem(
+            NetworkGalleryItem(
               uri: 'https://picsum.photos/300/400',
               title: 'Image 3',
               description: 'Description 3',
             ),
-            GalleryItem(
+            NetworkGalleryItem(
               uri: 'https://picsum.photos/300/200',
               title: 'Image 4',
               description: 'Description 4',
             ),
-            GalleryItem(
+            NetworkGalleryItem(
               uri: 'https://picsum.photos/300/300',
               title: 'Image 5',
               description: 'Description 5',

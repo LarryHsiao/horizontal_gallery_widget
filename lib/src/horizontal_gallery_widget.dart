@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:horizontal_gallery_widget/src/gallery_item.dart';
 
@@ -10,7 +12,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
   final void Function(GalleryItem item)? _onItemTap;
   final void Function()? _onAddItem;
   final void Function(GalleryItem item)? _onItemDelete;
-  final Widget Function(String url)? _imageBuilder;
+  final Widget Function(GalleryItem item)? _imageBuilder;
 
   /// Ctor.
   const HorizontalGalleryWidget({
@@ -24,7 +26,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
     void Function(GalleryItem)? onItemTap,
     void Function()? onAddItem,
     void Function(GalleryItem)? onItemDelete,
-    Widget Function(String uri)? imageBuilder,
+    Widget Function(GalleryItem item)? imageBuilder,
   })  : _items = items,
         _size = size,
         _editing = editing,
@@ -101,28 +103,8 @@ class HorizontalGalleryWidget extends StatelessWidget {
                   children: [
                     Positioned.fill(
                       child: _imageBuilder == null
-                          ? Image.network(
-                              item.uri,
-                              fit: BoxFit.cover,
-                              frameBuilder: (context, child, frame, _) {
-                                if (frame == null) {
-                                  return const Center(
-                                    child: SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                }
-                                return child;
-                              },
-                              errorBuilder: (context, error, _) {
-                                return const Center(
-                                  child: Icon(Icons.warning),
-                                );
-                              },
-                            )
-                          : _imageBuilder(item.uri),
+                          ? _buildImage(item)
+                          : _imageBuilder(item),
                     ),
                     if (_editing)
                       Positioned(
@@ -202,5 +184,54 @@ class HorizontalGalleryWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildImage(GalleryItem item) {
+    switch (item) {
+      case NetworkGalleryItem():
+        return Image.network(
+          item.uri,
+          fit: BoxFit.cover,
+          frameBuilder: (context, child, frame, _) {
+            if (frame == null) {
+              return const Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return child;
+          },
+          errorBuilder: (context, error, _) {
+            return const Center(
+              child: Icon(Icons.warning),
+            );
+          },
+        );
+      case LocalGalleryItem():
+        return Image.file(
+          File(item.path),
+          fit: BoxFit.cover,
+          frameBuilder: (context, child, frame, _) {
+            if (frame == null) {
+              return const Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return child;
+          },
+          errorBuilder: (context, error, _) {
+            return const Center(
+              child: Icon(Icons.warning),
+            );
+          },
+        );
+    }
   }
 }

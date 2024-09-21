@@ -1,4 +1,9 @@
+## 0.0.9
+
+- Local file path.
+
 ## 0.0.8
+
 - Id for each item.
 
 ## 0.0.7

@@ -1,9 +1,6 @@
 /// Item of the gallery.
-class GalleryItem {
+sealed class GalleryItem {
   final int id;
-
-  /// The uri of the image.
-  final String uri;
 
   /// The title of the image.
   final String title;
@@ -13,8 +10,29 @@ class GalleryItem {
 
   GalleryItem({
     this.id = -1,
-    this.uri = "",
     this.title = "",
     this.description = "",
+  });
+}
+
+class NetworkGalleryItem extends GalleryItem {
+  final String uri;
+
+  NetworkGalleryItem({
+    super.id,
+    this.uri = "",
+    super.title,
+    super.description,
+  });
+}
+
+class LocalGalleryItem extends GalleryItem {
+  final String path;
+
+  LocalGalleryItem({
+    super.id,
+    this.path = "",
+    super.title,
+    super.description,
   });
 }
