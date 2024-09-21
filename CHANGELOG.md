@@ -1,3 +1,6 @@
+## 0.0.8
+- Id for each item.
+
 ## 0.0.7
 
 - Add button
