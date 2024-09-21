@@ -8,6 +8,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
   final double _size;
   final List<GalleryItem> _items;
   final void Function(GalleryItem item)? _onItemTap;
+  final void Function()? _onAddItem;
   final void Function(GalleryItem item)? _onItemDelete;
   final Widget Function(String url)? _imageBuilder;
 
@@ -21,6 +22,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
     /// Original size, if the container is smaller then this size, the widgets will be scaled down.
     double size = 300,
     void Function(GalleryItem)? onItemTap,
+    void Function()? onAddItem,
     void Function(GalleryItem)? onItemDelete,
     Widget Function(String uri)? imageBuilder,
   })  : _items = items,
@@ -29,16 +31,63 @@ class HorizontalGalleryWidget extends StatelessWidget {
         _onItemTap = onItemTap,
         _imageBuilder = imageBuilder,
         _labels = labels,
-        _onItemDelete = onItemDelete;
+        _onItemDelete = onItemDelete,
+        _onAddItem = onAddItem;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: _items.length,
+      itemCount: _editing ? _items.length + 1 : _items.length,
       itemBuilder: (context, index) {
+        if (_editing && index == 0) {
+          return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: FittedBox(
+              child: SizedBox(
+                  width: _size,
+                  height: _size,
+                  child: GestureDetector(
+                    onTap: () => _onAddItem?.call(),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: ClipOval(
+                            child: Container(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.4),
+                              child: Icon(
+                                Icons.add,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onInverseSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )),
+            ),
+          );
+        }
+        final itemIndex = _editing ? index - 1 : index;
+        final item = _items[itemIndex];
         return GestureDetector(
-          onTap: () => _onItemTap?.call(_items[index]),
+          onTap: () => _onItemTap?.call(item),
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -53,7 +102,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
                     Positioned.fill(
                       child: _imageBuilder == null
                           ? Image.network(
-                              _items[index].uri,
+                              item.uri,
                               fit: BoxFit.cover,
                               frameBuilder: (context, child, frame, _) {
                                 if (frame == null) {
@@ -73,14 +122,14 @@ class HorizontalGalleryWidget extends StatelessWidget {
                                 );
                               },
                             )
-                          : _imageBuilder(_items[index].uri),
+                          : _imageBuilder(item.uri),
                     ),
                     if (_editing)
                       Positioned(
                         top: 0,
                         right: 0,
                         child: InkWell(
-                          onTap: () => _onItemDelete?.call(_items[index]),
+                          onTap: () => _onItemDelete?.call(item),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: ClipOval(
@@ -100,14 +149,14 @@ class HorizontalGalleryWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    if (_items[index].title.isNotEmpty &&
-                        _items[index].description.isNotEmpty &&
+                    if (item.title.isNotEmpty &&
+                        item.description.isNotEmpty &&
                         _labels)
                       Positioned(
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        child: _buildLabels(context, index),
+                        child: _buildLabels(context, item),
                       ),
                   ],
                 ),
@@ -119,7 +168,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLabels(BuildContext context, int index) {
+  Widget _buildLabels(BuildContext context, GalleryItem item) {
     return Container(
       width: _size,
       decoration: BoxDecoration(
@@ -138,14 +187,14 @@ class HorizontalGalleryWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            _items[index].title,
+            item.title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.onInverseSurface,
                 ),
           ),
           Text(
-            _items[index].description,
+            item.description,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onInverseSurface,
                 ),

@@ -89,6 +89,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
           },
+          onAddItem: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tapped on add button'),
+              ),
+            );
+          },
         ),
       ),
     );

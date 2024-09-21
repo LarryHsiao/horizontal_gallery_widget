@@ -1,3 +1,7 @@
+## 0.0.7
+
+- Add button
+
 ## 0.0.6
 
 - Scale down widget by the size.
