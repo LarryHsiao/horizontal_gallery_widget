@@ -192,6 +192,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
         return Image.network(
           item.uri,
           fit: BoxFit.cover,
+          headers: item.headers,
           frameBuilder: (context, child, frame, _) {
             if (frame == null) {
               return const Center(

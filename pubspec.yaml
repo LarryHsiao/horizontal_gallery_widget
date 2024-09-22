@@ -1,6 +1,6 @@
 name: horizontal_gallery_widget
 description: "Simple widget to show images in horizontal gallery with specific style."
-version: 0.0.9
+version: 0.0.10
 homepage: https://github.com/LarryHsiao/horizontal_gallery_widget
 
 environment:

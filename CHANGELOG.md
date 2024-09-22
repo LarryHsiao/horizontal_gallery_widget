@@ -1,3 +1,6 @@
+## 0.0.10
+- Add header parameter for NetworkGalleryItem.
+
 ## 0.0.9
 
 - Local file path.

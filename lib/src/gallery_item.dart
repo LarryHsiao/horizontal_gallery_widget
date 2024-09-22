@@ -17,10 +17,12 @@ sealed class GalleryItem {
 
 class NetworkGalleryItem extends GalleryItem {
   final String uri;
+  final Map<String, String> headers;
 
   NetworkGalleryItem({
     super.id,
     this.uri = "",
+    this.headers = const {},
     super.title,
     super.description,
   });
